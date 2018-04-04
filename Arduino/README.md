@@ -1,5 +1,4 @@
-# Partie développement Arduino
+# Arduino development part
 
-Développement du code "Arduino" lié à la gestion des différents capteurs et à la mise en forme des informations pour leur envoi par liaison série à l'application développé en Python pour le traitement et l'exploitation de ces données.
-
-En construction...
+This part is devoted to the Arduino sensors management.
+Data are collected from various sensors and formatted to be send via serial connection to the ADAotp Python application.
