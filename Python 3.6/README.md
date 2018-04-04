@@ -1,5 +1,5 @@
-# Partie développement Python.
+# Python development part.
 
-Développement de l'application permettant l'exploitation des données en provenance de la liaison série avec l'Arduino et ses capteurs.
-
-En cours de création...
+This part is devoted to Python development of the ADAotp application.
+The ADAotp application collect data from serial connection with Arduino.
+Data are then displayed on Matplotlib charts and stored as csv file if needed.
