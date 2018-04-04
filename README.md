@@ -2,6 +2,9 @@
 
 Initialement développé en Python 2.7, il est apparu utile de migrer vers Python 3.6 afin de disposer des dernières évolutions de Python et faciliter le recours à l'assitance de développeurs en Python.
 
+<img src="../master/Img/Start page.JPG" height="250"/><img src="../master/Img/Monotoring page_1.JPG" height="250"/>
+<img src="../master/Img/Monotoring page_2.JPG" height="250"/><img src="../master/Img/Monotoring page_3.JPG" height="250"/>
+
 # Analogue Data Acquisition of the poor
 
 Analogue Data Acquisition of the poor est une solution pour collecter, visualiser en temps réel et sauvegarder les données analogiques produites par des capteurs gérés par Arduino.
