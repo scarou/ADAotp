@@ -7,12 +7,13 @@
  Les capteurs actuellement testé sont:
  - ACS712 , 5 Ampères
  - Capteur de température DS18B20 (version encapsulée)
+ - Capteur détection de gas MQ-8 (détection hydrogène) --> sensorH
+ - Capteur de pression MPX5100DP --> sensorP
  
  Les capteurs "à venir" sont : 
  - Plusieurs capteurs de température DS18B20 (version encapsulée)
- - Capteur détection de gas MQ-8 (détection hydrogène)
  - Capteur courant, tension , Puissance INA219 en I2C
- - Capteur de pression MPX5100DP
+
  
  
  */
