@@ -19,6 +19,8 @@
  */
 #include <OneWire.h> //Librairie du bus OneWire
 #include <DallasTemperature.h> //Librairie du capteur
+#include <Adafruit_INA219.h>
+
 
 OneWire oneWire(2); // The One Wire bus is on pin 2
 DallasTemperature sensors(&oneWire); //Usage of One Wire for the sensors
@@ -48,24 +50,39 @@ int sensTime; // sensing time duration for averaging values
 int cnt;
 
 void setup() {
+
+  // INA219 sensor
+  uint32_t currentFrequency;
+  // Initialize the INA219.
+  // By default the initialization will use the largest range (32V, 2A).  However
+  // you can call a setCalibration function to change this range (see comments).
+  ina219.begin();
+  // To use a slightly lower 32V, 1A range (higher precision on amps):
+  //ina219.setCalibration_32V_1A();
+
+  // Or to use a lower 16V, 400mA range (higher precision on volts and amps):
+  //ina219.setCalibration_16V_400mA();
+  //----------------------
+
+  // Dallas DS18B20 sensors
 	sensors.begin(); // Activate sensors
 	sensors.getAddress(sensorDeviceAddress, 0);       // Ask the adress of the sensor at bus index 0
 	sensors.setResolution(sensorDeviceAddress, 11);   // Possible resolutions: 9,10,11,12
-  myTime = millis(); // Start a time counter
-  sensTime = 500; // sensing duration of 0.5 second
-  cnt = 0;        // Counter
+  //-----------------------
+
+  myTime = millis();  // Start a time counter
+  sensTime = 500;     // sensing duration of 0.5 second
+  cnt = 0;            // Counter
   
   Serial.begin(115200); // Start a serial communication
 }
 
 void loop() {
   while (millis() - myTime < sensTime ) { // sensing during sensTime millisecond
-	// sensing current
+    // This <while> loop is for measurements that need to be averaged.
+
+    // sensing current with ACS712
     rawCurrentValue = rawCurrentValue + analogRead(currentIn); // add each reading to a total
-	
-	// sensing voltage
-	//rawVoltageValue = rawVoltageValue + analogRead(voltageIn); // add each reading to a total
-	
     cnt++; // increase counter
   }
   
