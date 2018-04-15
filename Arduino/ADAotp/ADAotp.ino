@@ -91,13 +91,21 @@ void loop() {
   float pressureValue = ((rawPressureValue - 0.2) / 4.5) * 100.0; // * 0.145038; // kpa *0.145038 = psi
  
  // Sending data via serial port 
+  Serial.print("Temperature,");
   Serial.print(tempValue);
-  Serial.print(",");
+  Serial.print(",°C,");
+  
+  Serial.print("Current,");
   Serial.print(amps, 0); // the '3' after voltage allows you to display 3 digits after decimal point
-  Serial.print(",");
-  Serial.print(hydrogenValue,DEC); 
-  Serial.print(",");
-  Serial.println(pressureValue,DEC); 
+  Serial.print(",mA,");
+
+  Serial.print("Hydrogen,");
+  Serial.print(hydrogenValue,DEC);
+  Serial.print(",ppm,"); 
+
+  Serial.print("Pressure,");
+  Serial.print(pressureValue,DEC);
+  Serial.println(",Psi");
   
 
   rawCurrentValue = 0; // reset value
