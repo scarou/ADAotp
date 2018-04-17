@@ -34,15 +34,21 @@ data_filename = 'Data_log.csv'
 save_data_flg = False
 save_inital_data_flg = False
 
+
+
 fig = Figure()
 
-a = fig.add_subplot(221)
-b = fig.add_subplot(222)
-c = fig.add_subplot(223)
-d = fig.add_subplot(224)
+def add_subplot_config(arg1, arg2, arg3, arg4):
+	global a,b,c,d,subplot_array
+	fig.clf()
+	a = fig.add_subplot(arg1)
+	b = fig.add_subplot(arg2)
+	c = fig.add_subplot(arg3)
+	d = fig.add_subplot(arg4)
+	subplot_array = [a,b,c,d]
 
-subplot_array = [a,b,c,d]
 
+add_subplot_config(221, 222, 223, 224)
 
 def graphInit():
 	# global subplot_array
@@ -155,6 +161,7 @@ def clear_subplot(array_of_subplot):
 	"""
 	for subPlot in array_of_subplot:
 		subPlot.clear()
+
 
 def format_subplot(array_of_subplot):
 	"""
@@ -275,25 +282,21 @@ def animate(i):
 
 		clear_subplot(subplot_array)
 
-		# a.clear()
 		a.set_title('Temperature')
 		a.set_ylim(10,80)
 		a.set_ylabel (u'Temperature (°C)')
 		a.plot(big_data[series_name_list[0]],'ro-', label=u'Temp °C' , linewidth=0.5 , markersize=2)
 
-		# b.clear()
 		b.plot(big_data[series_name_list[1]], 'b^-', label='Current mA', linewidth=1 , markersize=2)
 		b.set_title('Current')
 		b.set_ylim(0,1000)
 		b.set_ylabel ('current (mA)')
 
-		# c.clear()
 		c.plot(big_data[series_name_list[2]], 'g^-', label='Hydrogen', linewidth=1 , markersize=2)
 		c.set_title('Hydrogen')
 		c.set_ylim(0,1000)
 		c.set_ylabel ('Hydrogen (ppm)')
 		
-		# d.clear()
 		d.plot(big_data[series_name_list[3]], 'm^-', label='Pressure', linewidth=1 , markersize=2)
 		d.set_title('Pressure')
 		d.set_ylim(0,100)
@@ -374,15 +377,22 @@ class DataLogApp(tkinter.Tk):
 		data_menu.add_command(label="Clear data", command = lambda: messagebox.showinfo('Sorry...','Not supported just yet!')) 	# add a command button/label labelled 
 		menu_bar.add_cascade(label="Data", menu=data_menu)													# add the data_menu element to the menu_bar element
 
+
+		# --- Graph menu ---
+		graph_menu = tkinter.Menu(menu_bar, tearoff=1)															# create a Menu element named "serial_port_menu"
+		graph_menu.add_command(label='1x1 graph', command = lambda: add_subplot_config(111, 111, 111, 111))		# add a command button/label labelled "Choose serial port"
+		graph_menu.add_command(label= '2x1 graph ', command = lambda: add_subplot_config(221, 222, 212, 212))	# add a command button/label labelled "Choose baud rate"
+		graph_menu.add_command(label='2x2 graph', command = lambda: add_subplot_config(221, 222, 223, 224))		# add a command button/label labelled "Start listening"
+		menu_bar.add_cascade(label="Graph", menu=graph_menu) 													# add the serial_port_menu element to the menu_bar element
+
 		# --- Serial port communication menu ---
 		serial_port_menu = tkinter.Menu(menu_bar, tearoff=1)										# create a Menu element named "serial_port_menu"
 		serial_port_menu.add_command(label='Choose port ...', command = choose_port_com)			# add a command button/label labelled "Choose serial port"
 		serial_port_menu.add_command(label= 'Choose baud rate... ', command = choose_baud_rate)		# add a command button/label labelled "Choose baud rate"
 		serial_port_menu.add_command(label='Open Serial COM...', command = lambda: open_serial_connection(port_COM,baud_rate,True))	# add a command button/label labelled "Start listening"
 		serial_port_menu.add_command(label='Close Serial COM...', command = lambda: open_serial_connection(port_COM,baud_rate,False))	# add a command button/label labelled "Start listening"
- 
 		menu_bar.add_cascade(label="Serial port", menu=serial_port_menu) 						# add the serial_port_menu element to the menu_bar element
-
+		
 
 		tkinter.Tk.config(self, menu=menu_bar)
 
@@ -483,16 +493,16 @@ class GraphPage(tkinter.Frame): # GraphPage is a "daughter" of the "mother" clas
 		var_port_com_label.set(port_COM)
 		self.port_com_label = tkinter.Label(self, text = 'COM14',textvariable=var_port_com_label, padx =5, pady =5)
 
-		# self.serialLbl = tkinter.Label(self, text = 'Serial',font=("Verdana",12))
-		# self.baud_rateLbl = tkinter.Label(self, text = '115200', padx =5, pady =5)
+		self.serialLbl = tkinter.Label(self, text = 'Serial',font=("Verdana",12))
+		self.baud_rateLbl = tkinter.Label(self, text = '115200', padx =5, pady =5)
 		# self.connectionLbl = tkinter.Label(self, text = 'OPEN', bg='green', padx =10, pady =5)
 
 		self.record_data_Label.grid(row = 0, column = 0, columnspan = 3)
-		# self.serialLbl.grid(row = 0, column = 4, columnspan = 3)
+		self.serialLbl.grid(row = 0, column = 4, columnspan = 3)
 		self.start_btn.grid(row = 1, column = 1)
 		self.stop_btn.grid(row = 1, column =2 )
 		self.port_com_label.grid(row=1,column=4, sticky='e')
-		# self.baud_rateLbl.grid(row=1,column=5)
+		self.baud_rateLbl.grid(row=1,column=5)
 		# self.connectionLbl.grid(row=1,column=6)
 
 		# création d'un widget 'Canvas' pour l'affichage des graphiques :
@@ -501,8 +511,16 @@ class GraphPage(tkinter.Frame): # GraphPage is a "daughter" of the "mother" clas
 
 		self.canvas.get_tk_widget().grid(row =2, column =0)
 
-		# toolbar = NavigationToolbar2TkAgg(can1, self)
-		# toolbar.update()
+		
+		# self.toolbar_frame = tkinter.Frame(self)
+		# self.toolbar_frame.grid(row=2,column=0,sticky='w')
+
+		# Doit être mis dans une frame et la frame placée par .grid sinon confli avec
+		# méthode .pack automatiquement appelée par NavigationToolbar2TkAgg
+
+		# self.toolbar = NavigationToolbar2TkAgg(self.toolbar_frame, self)
+		# self.toolbar.update()
+
 		self.canvas._tkcanvas.grid(row =2, column =0, columnspan =7, padx =5, pady =5, sticky='nswe')
 
 
