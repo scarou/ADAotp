@@ -48,9 +48,9 @@ int sensTime; // sensing time duration for averaging values
 int cnt;
 
 void setup() {
-	sensors.begin(); // Activate sensors
-	sensors.getAddress(sensorDeviceAddress, 0);       // Ask the adress of the sensor at bus index 0
-	sensors.setResolution(sensorDeviceAddress, 11);   // Possible resolutions: 9,10,11,12
+  sensors.begin(); // Activate sensors
+  sensors.getAddress(sensorDeviceAddress, 0);       // Ask the adress of the sensor at bus index 0
+  sensors.setResolution(sensorDeviceAddress, 11);   // Possible resolutions: 9,10,11,12
   myTime = millis(); // Start a time counter
   sensTime = 500; // sensing duration of 0.5 second
   cnt = 0;        // Counter
@@ -60,12 +60,12 @@ void setup() {
 
 void loop() {
   while (millis() - myTime < sensTime ) { // sensing during sensTime millisecond
-	// sensing current
+  // sensing current
     rawCurrentValue = rawCurrentValue + analogRead(currentIn); // add each reading to a total
-	
-	// sensing voltage
-	//rawVoltageValue = rawVoltageValue + analogRead(voltageIn); // add each reading to a total
-	
+  
+  // sensing voltage
+  //rawVoltageValue = rawVoltageValue + analogRead(voltageIn); // add each reading to a total
+  
     cnt++; // increase counter
   }
   
