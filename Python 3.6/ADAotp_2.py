@@ -285,19 +285,19 @@ def animate(i):
 		a.set_title('Temperature')
 		a.set_ylim(10,80)
 		a.set_ylabel (u'Temperature (°C)')
-		a.plot(big_data[series_name_list[0]],'ro-', label=u'Temp °C' , linewidth=0.5 , markersize=2)
+		a.plot(big_data[series_name_list[0]],'ro-', label=u'Temp °C' , linewidth=1 , markersize=1.5)
 
-		b.plot(big_data[series_name_list[1]], 'b^-', label='Current mA', linewidth=1 , markersize=2)
+		b.plot(big_data[series_name_list[1]], 'bo-', label='Current mA', linewidth=1 , markersize=1.5)
 		b.set_title('Current')
 		b.set_ylim(0,1000)
 		b.set_ylabel ('current (mA)')
 
-		c.plot(big_data[series_name_list[2]], 'g^-', label='Hydrogen', linewidth=1 , markersize=2)
+		c.plot(big_data[series_name_list[2]], 'go-', label='Hydrogen', linewidth=1 , markersize=1.5)
 		c.set_title('Hydrogen')
 		c.set_ylim(0,1000)
 		c.set_ylabel ('Hydrogen (ppm)')
 		
-		d.plot(big_data[series_name_list[3]], 'm^-', label='Pressure', linewidth=1 , markersize=2)
+		d.plot(big_data[series_name_list[3]], 'mo-', label='Pressure', linewidth=1 , markersize=1.5)
 		d.set_title('Pressure')
 		d.set_ylim(0,100)
 		d.set_ylabel ('Pressure (KPa)')
@@ -551,7 +551,7 @@ posY = (screen_y//2)-(window_y//2)
 geo = f"{window_x}x{window_y}+{posX}+{posY}"
 app.geometry(geo)
 
-ani = animation.FuncAnimation(fig, animate, interval=500)
+ani = animation.FuncAnimation(fig, animate, interval=1000)
 
 app.mainloop()
 
