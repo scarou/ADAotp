@@ -92,8 +92,7 @@ def choosePort(): # Allow the user to choose the serial port for serial communic
     
     if arduinoData.isOpen() == True:
         print (arduinoData.isOpen())
-        # popupmsg('Serial port {} already opened. Close connection prior to change port.'.format(portCOM))
-        messagebox.showinfo('Not allowed !','Serial port {} already opened. Close connection prior to change port.'.format(portCOM))
+        messagebox.showinfo('Not allowed !',f'Serial port {portCOM} already opened. Close connection prior to change port.')
 
     else:
         portComQ =tkinter.Tk()
@@ -110,7 +109,7 @@ def choosePort(): # Allow the user to choose the serial port for serial communic
         def callback():
             global portCOM
             portCOM = 'com' + str(e.get())
-            print('Port {} is now selected.'.format(portCOM))
+            print(f'Port {portCOM} is now selected.')
             portComQ.destroy()
             
         b = tkinter.Button(portComQ, text='Submit', width=10, command=callback)
@@ -121,8 +120,7 @@ def choosePort(): # Allow the user to choose the serial port for serial communic
 def chooseBaudRate(): # Allow the user to choose the baud rate of the serial communication
     if arduinoData.isOpen() == True:
         print (arduinoData.isOpen())
-        # popupmsg('Serial port {} already opened at {} baud. Close connection prior to change baud rate.'.format(portCOM,baudRate))
-        messagebox.showinfo('Not allowed !','Serial port {} already opened at {} baud.\nClose connection prior to change baud rate.'.format(portCOM,baudRate))
+        messagebox.showinfo('Not allowed !',f'Serial port {portCOM} already opened at {baudRate} baud.\nClose connection prior to change baud rate.')
 
     else:
         baudRateQ =tkinter.Tk()
@@ -138,7 +136,7 @@ def chooseBaudRate(): # Allow the user to choose the baud rate of the serial com
         def callback():
             global baudRate
             baudRate = e.get()
-            print('{} baudrate is now selected'.format(baudRate))
+            print(f'{baudRate} baudrate is now selected')
             baudRateQ.destroy()
             
         b = tkinter.Button(baudRateQ, text='Submit', width=10, command=callback)
@@ -161,7 +159,7 @@ def chooseSampleSize(): # Allow the user to choose the sample size of displayed 
     def callback():
         global sampleSize
         sampleSize = int(e.get())
-        print('Sample size is now {}'.format(sampleSize))
+        print(f'Sample size is now {sampleSize}')
         sampleSizeQ.destroy()
 
 ##    e.bind("<Return>", callback)
@@ -182,22 +180,19 @@ def openSerialPort(portCom, baudRate, openState): # Should open a serial communi
             try:
                 arduinoData.open()
             except:
-                # popupmsg('Unable to open serial port {}. Please check connection.'.format(arduinoData.port))
-                messagebox.showerror('Ouch !','Unable to open serial port {}. Please check connection.'.format(arduinoData.port))
+                messagebox.showerror('Ouch !',f'Unable to open serial port {arduinoData.port}. Please check connection.')
             else:
-                print('Port {} is now opened'.format(arduinoData.port))
+                print(f'Port {arduinoData.port} is now opened')
                 
     elif openState == False:
         if arduinoData.isOpen() == True:
             try:
                 arduinoData.close()
             except:
-                # popupmsg('Unable to close serial port {}. Please check connection.'.format(arduinoData.port))
-                messagebox.showerror('Damn !','Unable to close serial port {}. Please check connection.'.format(arduinoData.port))
+                messagebox.showerror('Damn !',f'Unable to close serial port {arduinoData.port}. Please check connection.')
             else:
-                print('Port {} is now closed'.format(arduinoData.port))
+                print(f'Port {arduinoData.port} is now closed')
         else:
-            # popupmsg('Serial port {} already closed.'.format(arduinoData.port))
             messagebox.showinfo('Hey buddy !','Serial port already closed.')
             
 # -----------------------    
@@ -222,7 +217,6 @@ def saveDataAsCSV(state): # Create a new csv file for saving data.
             print("STOP recording data and saving record as csv file.")
             print(dataFileNameClosed)
     else:
-        # popupmsg('No serial port opened. No data to record!')
         messagebox.showinfo('Come on buddy...','No serial port opened. No data to record!')
 
         
@@ -320,7 +314,7 @@ def animate(i): # This function create graph, read data from serial port and upd
                     myFile.close()
 
 
-class DataLogApp(tkinter.Tk): # DataLogApp is a "daughter" of the "mother" class tkinter.Tk 
+class DataLogApp(tkinter.Tk): # DataLogApp inherit all attributs of Tk class within tkinter
     """
     Design the main application window and menubar
     """
@@ -336,6 +330,12 @@ class DataLogApp(tkinter.Tk): # DataLogApp is a "daughter" of the "mother" class
         
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0,weight=1)
+
+
+        #  test déclaration StringVar...
+        maVariableTest = tkinter.StringVar()
+        maVariableTest.set('1ere valeur test DataLogApp')
+        print(f'maVariableTest = {maVariableTest.get()}')
 
         menubar = tkinter.Menu(container)                        # create a container named "menubar" that will contain all menu items
         
@@ -361,7 +361,7 @@ class DataLogApp(tkinter.Tk): # DataLogApp is a "daughter" of the "mother" class
 
         
         # --- Serial port communication menu ---
-        serialPort_menu = tkinter.Menu(menubar, tearoff=1)               # create a Menu element named "serialPort_menu"
+        serialPort_menu = tkinter.Menu(menubar, tearoff=1)      # create a Menu element named "serialPort_menu"
         serialPort_menu.add_command(label='Choose port ...',    # add a command button/label labelled "Choose serial port"
                                 command = choosePort)
         serialPort_menu.add_command(label= 'Choose baud rate... ', # add a command button/label labelled "Choose baud rate"
@@ -425,7 +425,8 @@ class StartPage(tkinter.Frame): # Start page is a "daughter" of the "mother" cla
 
 
 
-class graph_Page(tkinter.Frame): # graph_Page is a "daughter" of the "mother" class tkinter.Frame
+
+class graph_Page(tkinter.Frame): # graph_Page is a "daughter" of the "mother" class tkinter.Frame it will inherit all attributs of Frame class within tkinter
     """
     Create the graph monitoring page.
     """
@@ -488,6 +489,7 @@ class graph_Page(tkinter.Frame): # graph_Page is a "daughter" of the "mother" cl
 ##        toolbar.update()
         self.canvas._tkcanvas.grid(row =2, column =0, columnspan =7, padx =5, pady =5, sticky='nswe')
 
+
     def startBtnClick (self):
         if arduinoData.isOpen() == True:
             self.startBtn.configure(background= "green",relief="sunken")
@@ -524,7 +526,7 @@ window_x = 1280
 window_y = 720
 posX = (screen_x//2)-(window_x//2)
 posY = (screen_y//2)-(window_y//2)
-geo = "{}x{}+{}+{}".format(window_x,window_y,posX,posY)
+geo = f"{window_x}x{window_y}+{posX}+{posY}"
 app.geometry(geo)
 
 ani = animation.FuncAnimation(f, animate, interval=500)
