@@ -533,39 +533,10 @@ posY = (screen_y//2)-(window_y//2)
 geo = f"{window_x}x{window_y}+{posX}+{posY}"
 app.geometry(geo)
 
-ani = animation.FuncAnimation(fig, animate, interval=800)
+ani = animation.FuncAnimation(fig, animate, interval=500)
 
 app.mainloop()
 
 
 
-
-# open_serial_connection(port_COM,baud_rate,True)
-# raw_values_array = serial_to_array()
-
-# series_name_list = raw_values_array[0::3]
-# # print (len(big_data))
-# if len(big_data) == 0:
-# 	big_data = big_data_init()
-# 	print(f'BigData initialized with {len(big_data)} series.')
-# # print (len(big_data))
-
-
-# # print(type(big_data))
-# # print(big_data)
-# n = int(input("Loop number ?"))
-# for i in range(0,n):
-# 	raw_values_array = serial_to_array()
-# 	serie_values_list = raw_values_array[1::3]
-# 	for keyName, value in zip(series_name_list, serie_values_list):
-# 		big_data[keyName].append(value+ str(i))
-# 	print(f'Loop # : {i}')
-	
-
-# for key,value in big_data.items():
-# 	print (key,value)
-
-# input()
-
-# open_serial_connection(port_COM,baud_rate,False)
 
