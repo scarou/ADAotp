@@ -25,7 +25,7 @@ style.use('seaborn-darkgrid')
 
 # --- default values ---
 port_COM = 'com14'
-baud_rate = 115200
+baud_rate=115200
 sample_size = 50
 aruino_data = serial.Serial()    #Creating our serial object named aruino_data
 big_data = {}
@@ -48,9 +48,9 @@ def add_subplot_config(arg1, arg2, arg3, arg4):
 	subplot_array = [a,b,c,d]
 
 
-add_subplot_config(221, 222, 223, 224)
+add_subplot_config(arg1=221, arg2=222, arg3=223, arg4=224)
 
-def graphInit():
+def graph_init():
 	# global subplot_array
 	# for serie in subplot_array :
 	# 	serie.set_title('Temp')
@@ -76,11 +76,12 @@ def graphInit():
 	# d.set_ylabel ('Pressure (KPa)')
 
 
-def askForValue(title_text, message, initial_value):
+def ask_for_value(title_text, message, initial_value):
 	"""
 	Show a popup message with an entry and a default value
 	"""
 	popup_frame = tkinter.Tk()
+	
 	popup_frame.wm_title(title_text)
 	label = tkinter.Label(popup_frame, text=message)
 	label.pack(side='top', fill='x', pady=10)
@@ -90,14 +91,21 @@ def askForValue(title_text, message, initial_value):
 	popup_entry.select_range(0,'end')
 	popup_entry.focus_set()
 
-	def callback():
+
+	def _on_enter(self):
+		popup_button.focus_set()
+
+	def callback(self):
 		global new_value
 		new_value = popup_entry.get()
 		# print(f'New value is now {new_value}')
 		popup_frame.quit()
 			
-	popup_button = tkinter.Button(popup_frame, text = 'submit', width = 10, command= callback)
+	popup_button = tkinter.Button(popup_frame, text='submit', width=10, command=callback)
 	popup_button.pack()
+	popup_entry.bind('<Return>', _on_enter)
+
+	popup_button.bind('<Return>', callback)
 	popup_frame.mainloop()
 	popup_frame.destroy()
 	return new_value
@@ -121,7 +129,9 @@ def choose_baud_rate():
 	Ask for and return a new baud rate speed
 	"""
 	global baud_rate
-	baud_rate = int(askForValue('Choose baudrate speed.','Specify the baud rate value.',baud_rate))
+	baud_rate = int(ask_for_value(title_text='Choose baudrate speed.', 
+									 message='Specify the baud rate value.', 
+							   initial_value=baud_rate))
 	print(f'New baud rate is : {baud_rate}')
 	# return newBaudRate
 		
@@ -131,7 +141,9 @@ def choose_port_com():
 	Ask for and return a new port COM
 	"""
 	global port_COM
-	port_COM = askForValue('Choose a serial port.','Choose the serial port to listen.',port_COM[3:])
+	port_COM = ask_for_value(title_text='Choose a serial port.', 
+								message='Choose the serial port to listen.',
+						  initial_value=port_COM[3:])
 	port_COM = 'com' + str(port_COM)
 	print(f'New port COM is : {port_COM}')
 	# return newPortCom
@@ -142,7 +154,9 @@ def choose_sample_size():
 	Ask for and return a new sample size
 	"""
 	global sample_size
-	sample_size = int(askForValue('Choose sample size.','Specify the sample size.',sample_size))
+	sample_size = int(ask_for_value(title_text='Choose sample size.',
+									   message='Specify the sample size.',
+								 initial_value=sample_size))
 	print(f'New sample size is : {sample_size}')
 	# return sample_size
 
@@ -173,14 +187,14 @@ def create_series_dictionary(series_name_list):
 	"""
 	Create a dictionnary with the series_name_list as keys
 	"""
-	localDict = {}
-	for seriesName in series_name_list:
-		localDict[seriesName] = []
-		# print (seriesName)
-	return localDict
+	tempo_dict = {}
+	for serie_name in series_name_list:
+		tempo_dict[serie_name] = []
+		# print (serie_name)
+	return tempo_dict
 
 
-def open_serial_connection(port_COM,baud_rate,open_state):
+def open_serial_connection(port_COM, baud_rate, open_state):
 	"""
 	If open_state = True then open a serial connection of port_COM at baud_rate speed.
 	If open_state = False then close serial connection.
@@ -272,15 +286,15 @@ def animate(i):
 		serie_values_list = raw_values_array[1::3]
 		series_name_list = raw_values_array[0::3] # Maybe not the most efficient place to put it...
 
-		for keyName, value in zip(series_name_list, serie_values_list):
-			big_data[keyName].append(float(value))
+		for key_name, value in zip(series_name_list, serie_values_list):
+			big_data[key_name].append(float(value))
 
 		# print(big_data[series_name_list[0]])
-		# graphInit()
+		# graph_init()
 		
 		# print(f'animate : {subplot_array}')
 
-		clear_subplot(subplot_array)
+		clear_subplot(array_of_subplot=subplot_array)
 
 		a.set_title('Temperature')
 		a.set_ylim(10,80)
@@ -305,7 +319,7 @@ def animate(i):
 		series_lengh = len(big_data[series_name_list[0]])
 
 		if series_lengh > sample_size:
-			resize_sample(series_name_list, sample_size)
+			resize_sample(series_name_list_to_resize=series_name_list, sample_size=sample_size)
 
 		if save_data_flg == True:
 			global save_inital_data_flg
@@ -400,9 +414,9 @@ class DataLogApp(tkinter.Tk):
 
 		pages_dictionary = {StartPage, GraphPage, ParamPage}
 
-		for F in pages_dictionary:
-			frame = F(container, self)
-			self.frames[F] = frame
+		for page in pages_dictionary:
+			frame = page(container, self)
+			self.frames[page] = frame
 			frame.grid(row=0, column=0, sticky="nsew")
 		self.show_frame(StartPage)
 
@@ -411,19 +425,19 @@ class DataLogApp(tkinter.Tk):
 		frame.tkraise()
 
 
-class StartPage(tkinter.Frame): # Start page is a "daughter" of the "mother" class tkinter.Frame
+class StartPage(tkinter.Frame):
 	"""
 	Create the Start page
 	"""
 
 	def __init__(self, parent, controller):
 
-		tkinter.Frame.__init__(self,parent) # Call initialisation of the mother class tkinter.Frame and transmit the parent name
+		tkinter.Frame.__init__(self, parent) # Call initialisation of the mother class tkinter.Frame and transmit the parent name
 
 		label = tkinter.Label(self, text="""\nPython 3.6 version of ADAotp\n
 		\nAnalogue Data Acquisition of the poor\n
-		\nUse at your own risk.\nThere is no promise of waranty.\n""", font= LARGE_FONT)
-		label.pack(pady=10,padx=10)
+		\nUse at your own risk.\nThere is no promise of waranty.\n""", font=LARGE_FONT)
+		label.pack(pady=10, padx=10)
 
 		button1 = tkinter.Button(self, text="Agree", command=lambda: controller.show_frame(GraphPage))
 		button1.pack()
@@ -435,35 +449,156 @@ class ParamPage(tkinter.Frame):
 	"""
 	Create the parameters page
 	"""
+	LABEL_WIDTH =24
+	
 
 	def __init__(self, parent, controller):
 
 		tkinter.Frame.__init__(self,parent) # Call initialisation of the mother class tkinter.Frame and transmit the parent name
 
-		label = tkinter.Label(self, text="\nParameters\n", font= LARGE_FONT)
-		label.grid(row = 0, column = 0, pady=10,padx=10)
+		parameters_label = tkinter.Label(self, text="\nParameters\n", font= LARGE_FONT)
+		parameters_label.grid(row=0, column=0, pady=10,padx=10)
 
-		check_one = tkinter.Checkbutton(self)
-		check_one.grid(row = 1, column = 0)
-		entry_1 = tkinter.Entry(self, text = "entry 1")
-		entry_1.grid(row = 1, column = 1)
-		entry_2 = tkinter.Entry(self, text = "entry 2")
-		entry_2.grid(row = 1, column = 2)
-		entry_3 = tkinter.Entry(self, text = "entry 3")
-		entry_3.grid(row = 1, column = 3)
-		entry_4 = tkinter.Entry(self, text = "entry 4")
-		entry_4.grid(row = 1, column = 4)
-		entry_5 = tkinter.Entry(self, text = "entry 5")
-		entry_5.grid(row = 1, column = 5)
+		labels_frame = tkinter.Frame(self)
+		labels_frame.grid(row=1, column=0, padx=10, pady=5)
+
+		label_name = ['Serie name', 'Units', 'Y min', 'Y max', 'Line style', 'Thickness', 'Other']
+		
+
+
+		serie_name_label = tkinter.Label(labels_frame, text='Serie name')
+		serie_name_label.grid(row=1, column=0)
+		serie_name_label.configure(width=self.LABEL_WIDTH)
+		units_label = tkinter.Label(labels_frame, text='units')
+		units_label.grid(row=1, column=1)
+		units_label.configure(width=self.LABEL_WIDTH)
+		ymin_label = tkinter.Label(labels_frame, text='Y min')
+		ymin_label.grid(row=1, column=2)
+		ymin_label.configure(width=self.LABEL_WIDTH)
+		ymax_label = tkinter.Label(labels_frame, text='Y max')
+		ymax_label.grid(row=1, column=3)
+		ymax_label.configure(width=self.LABEL_WIDTH)
+		line_style_label = tkinter.Label(labels_frame, text='Line style')
+		line_style_label.grid(row=1, column=4)
+		line_style_label.configure(width=self.LABEL_WIDTH)
+		thickness_label = tkinter.Label(labels_frame, text='Thickness')
+		thickness_label.grid(row=1, column=5)
+		thickness_label.configure(width=self.LABEL_WIDTH)
+		graph_panel_label = tkinter.Label(labels_frame, text='Graph #')
+		graph_panel_label.grid(row=1, column=6)
+		graph_panel_label.configure(width=self.LABEL_WIDTH)
+		other_label = tkinter.Label(labels_frame, text='Other')
+		other_label.grid(row=1, column=7)
+		other_label.configure(width=self.LABEL_WIDTH)
+
+		serie_1_frame = tkinter.Frame(self)
+		serie_1_frame.grid(row=2, column=0, padx=10, pady=5)
+
+		# ---- serie_1 ----
+		serie_1_name_label = tkinter.Label(serie_1_frame, text='serie #1')
+		serie_1_name_label.grid(row=2, column=0)
+		serie_1_name_label.configure(width=self.LABEL_WIDTH)
+		serie_1_units_entry = tkinter.Entry(serie_1_frame)
+		serie_1_units_entry.grid(row=2, column=1)
+		serie_1_ymin_entry = tkinter.Entry(serie_1_frame)
+		serie_1_ymin_entry.grid(row=2, column=2)
+		serie_1_ymax_entry = tkinter.Entry(serie_1_frame)
+		serie_1_ymax_entry.grid(row=2, column=3)
+		serie_1_style_entry = tkinter.Entry(serie_1_frame)
+		serie_1_style_entry.grid(row=2, column=4)
+		serie_1_thickness_entry = tkinter.Entry(serie_1_frame)
+		serie_1_thickness_entry.grid(row=2, column=5)
+		serie_1_graph_entry = tkinter.Entry(serie_1_frame)
+		serie_1_graph_entry.grid(row=2, column=6)
+		serie_1_other_entry = tkinter.Entry(serie_1_frame)
+		serie_1_other_entry.grid(row=2, column=7)
+
+		# ---- serie_2 ----
+		serie_2_frame = tkinter.Frame(self)
+		serie_2_frame.grid(row=3, column=0, padx=10, pady=5)
+
+		serie_2_name_label = tkinter.Label(serie_2_frame, text='serie #2')
+		serie_2_name_label.grid(row=3, column=0)
+		serie_2_units_entry = tkinter.Entry(serie_2_frame)
+		serie_2_units_entry.grid(row=3, column=1)
+		serie_2_ymin_entry = tkinter.Entry(serie_2_frame)
+		serie_2_ymin_entry.grid(row=3, column=2)
+		serie_2_ymax_entry = tkinter.Entry(serie_2_frame)
+		serie_2_ymax_entry.grid(row=3, column=3)
+		serie_2_style_entry = tkinter.Entry(serie_2_frame)
+		serie_2_style_entry.grid(row=3, column=4)
+		serie_2_thickness_entry = tkinter.Entry(serie_2_frame)
+		serie_2_thickness_entry.grid(row=3, column=5)
+		serie_2_graph_entry = tkinter.Entry(serie_2_frame)
+		serie_2_graph_entry.grid(row=3, column=6)
+		serie_2_other_entry = tkinter.Entry(serie_2_frame)
+		serie_2_other_entry.grid(row=3, column=7)
+
+		# ---- serie_3 ----
+		serie_3_frame = tkinter.Frame(self)
+		serie_3_frame.grid(row=4, column=0, padx=10, pady=5)
+
+		serie_3_name_label = tkinter.Label(serie_3_frame, text='serie #3')
+		serie_3_name_label.grid(row=4, column=0)
+		serie_3_units_entry = tkinter.Entry(serie_3_frame)
+		serie_3_units_entry.grid(row=4, column=1)
+		serie_3_ymin_entry = tkinter.Entry(serie_3_frame)
+		serie_3_ymin_entry.grid(row=4, column=2)
+		serie_3_ymax_entry = tkinter.Entry(serie_3_frame)
+		serie_3_ymax_entry.grid(row=4, column=3)
+		serie_3_style_entry = tkinter.Entry(serie_3_frame)
+		serie_3_style_entry.grid(row=4, column=4)
+		serie_3_thickness_entry = tkinter.Entry(serie_3_frame)
+		serie_3_thickness_entry.grid(row=4, column=5)
+		serie_3_graph_entry = tkinter.Entry(serie_3_frame)
+		serie_3_graph_entry.grid(row=4, column=6)
+		serie_3_other_entry = tkinter.Entry(serie_3_frame)
+		serie_3_other_entry.grid(row=4, column=7)
+
+		# ---- serie_4 ----
+		serie_4_frame = tkinter.Frame(self)
+		serie_4_frame.grid(row=5, column=0, padx=10, pady=5)
+
+		serie_4_name_label = tkinter.Label(serie_4_frame, text='serie #4')
+		serie_4_name_label.grid(row=5, column=0)
+		serie_4_units_entry = tkinter.Entry(serie_4_frame)
+		serie_4_units_entry.grid(row=5, column=1)
+		serie_4_ymin_entry = tkinter.Entry(serie_4_frame)
+		serie_4_ymin_entry.grid(row=5, column=2)
+		serie_4_ymax_entry = tkinter.Entry(serie_4_frame)
+		serie_4_ymax_entry.grid(row=5, column=3)
+		serie_4_style_entry = tkinter.Entry(serie_4_frame)
+		serie_4_style_entry.grid(row=5, column=4)
+		serie_4_thickness_entry = tkinter.Entry(serie_4_frame)
+		serie_4_thickness_entry.grid(row=5, column=5)
+		serie_4_graph_entry = tkinter.Entry(serie_4_frame)
+		serie_4_graph_entry.grid(row=5, column=6)
+		serie_4_other_entry = tkinter.Entry(serie_4_frame)
+		serie_4_other_entry.grid(row=5, column=7)
+
+		# ---- serie_5 ----
+		serie_5_frame = tkinter.Frame(self)
+		serie_5_frame.grid(row=6, column=0, padx=10, pady=5)
+
+		serie_5_name_label = tkinter.Label(serie_5_frame, text='serie #5')
+		serie_5_name_label.grid(row=6, column=0)
+		serie_5_units_entry = tkinter.Entry(serie_5_frame)
+		serie_5_units_entry.grid(row=6, column=1)
+		serie_5_ymin_entry = tkinter.Entry(serie_5_frame)
+		serie_5_ymin_entry.grid(row=6, column=2)
+		serie_5_ymax_entry = tkinter.Entry(serie_5_frame)
+		serie_5_ymax_entry.grid(row=6, column=3)
+		serie_5_style_entry = tkinter.Entry(serie_5_frame)
+		serie_5_style_entry.grid(row=6, column=4)
+		serie_5_thickness_entry = tkinter.Entry(serie_5_frame)
+		serie_5_thickness_entry.grid(row=6, column=5)
+		serie_5_graph_entry = tkinter.Entry(serie_5_frame)
+		serie_5_graph_entry.grid(row=6, column=6)
+		serie_5_other_entry = tkinter.Entry(serie_5_frame)
+		serie_5_other_entry.grid(row=6, column=7)
 
 		button1 = tkinter.Button(self, text="Ok", command=lambda: controller.show_frame(GraphPage))
-		button1.grid(row = 6, column = 2)
-
-
-class SerieParameter():
-	"""
-	Create a class to define parameter of a data serie
-	"""
+		button1.grid(row=7, column=0)
 
 
 class GraphPage(tkinter.Frame): # GraphPage is a "daughter" of the "mother" class tkinter.Frame it will inherit all attributs of Frame class within tkinter
@@ -473,16 +608,16 @@ class GraphPage(tkinter.Frame): # GraphPage is a "daughter" of the "mother" clas
 
 	def __init__(self, parent, controller):
 
-		tkinter.Frame.__init__(self,parent) # Call initialisation of the mother class tkinter.Frame and transmit the parent name
+		tkinter.Frame.__init__(self, parent) # Call initialisation of the mother class tkinter.Frame and transmit the parent name
 		
 		self.rowconfigure(2, weight=1)
 		self.columnconfigure(3, weight=1)
 
-		tkinter.Label(self, text = 'Monitoring Page', font=("Verdana",14), padx =10, pady =15).grid(row=0,column=3, rowspan =2)
+		tkinter.Label(self, text='Monitoring Page', font=("Verdana",14), padx=10, pady=15).grid(row=0, column=3, rowspan=2)
 
 		self.record_data_Label = tkinter.Label(self, text = 'Record data as .csv',font=("Verdana",12))
-		self.start_btn = tkinter.Button(self, text = 'START',  padx =10, pady =5,command = self.start_btn_click)
-		self.stop_btn = tkinter.Button(self, text = 'STOP', background= "red",relief="sunken", padx =10, pady =5,command = self.stop_btn_click)
+		self.start_button = tkinter.Button(self, text='START',  padx=10, pady=5, command=self.start_button_click)
+		self.stop_button = tkinter.Button(self, text='STOP', background="red", relief="sunken", padx=10, pady=5, command=self.stop_button_click)
 
 		# port_COM.trace("w", update_label)
 
@@ -491,25 +626,25 @@ class GraphPage(tkinter.Frame): # GraphPage is a "daughter" of the "mother" clas
 
 		var_port_com_label = tkinter.StringVar()
 		var_port_com_label.set(port_COM)
-		self.port_com_label = tkinter.Label(self, text = 'COM14',textvariable=var_port_com_label, padx =5, pady =5)
+		self.port_com_label = tkinter.Label(self, text='COM14', textvariable=var_port_com_label, padx=5, pady=5)
 
-		self.serialLbl = tkinter.Label(self, text = 'Serial',font=("Verdana",12))
-		self.baud_rateLbl = tkinter.Label(self, text = '115200', padx =5, pady =5)
+		self.serial_label = tkinter.Label(self, text='Serial', font=("Verdana",12))
+		self.baud_rate_label = tkinter.Label(self, text='115200', padx=5, pady=5)
 		# self.connectionLbl = tkinter.Label(self, text = 'OPEN', bg='green', padx =10, pady =5)
 
-		self.record_data_Label.grid(row = 0, column = 0, columnspan = 3)
-		self.serialLbl.grid(row = 0, column = 4, columnspan = 3)
-		self.start_btn.grid(row = 1, column = 1)
-		self.stop_btn.grid(row = 1, column =2 )
-		self.port_com_label.grid(row=1,column=4, sticky='e')
-		self.baud_rateLbl.grid(row=1,column=5)
-		# self.connectionLbl.grid(row=1,column=6)
+		self.record_data_Label.grid(row=0, column=0, columnspan=3)
+		self.serial_label.grid(row=0, column=4, columnspan=3)
+		self.start_button.grid(row=1, column=1)
+		self.stop_button.grid(row=1, column=2 )
+		self.port_com_label.grid(row=1, column=4, sticky='e')
+		self.baud_rate_label.grid(row=1, column=5)
+		# self.connectionLbl.grid(row=1, column=6)
 
 		# création d'un widget 'Canvas' pour l'affichage des graphiques :
 		self.canvas = FigureCanvasTkAgg(fig, self)
 		self.canvas.draw
 
-		self.canvas.get_tk_widget().grid(row =2, column =0)
+		self.canvas.get_tk_widget().grid(row=2, column=0)
 
 		
 		# self.toolbar_frame = tkinter.Frame(self)
@@ -521,22 +656,22 @@ class GraphPage(tkinter.Frame): # GraphPage is a "daughter" of the "mother" clas
 		# self.toolbar = NavigationToolbar2TkAgg(self.toolbar_frame, self)
 		# self.toolbar.update()
 
-		self.canvas._tkcanvas.grid(row =2, column =0, columnspan =7, padx =5, pady =5, sticky='nswe')
+		self.canvas._tkcanvas.grid(row=2, column=0, columnspan=7, padx=5, pady=5, sticky='nswe')
 
 
-	def start_btn_click (self):
+	def start_button_click (self):
 		if aruino_data.isOpen() == True:
-			self.start_btn.configure(background= "green",relief="sunken")
-			self.stop_btn.configure(background= "SystemButtonFace",relief="raised")
+			self.start_btn.configure(background="green", relief="sunken")
+			self.stop_btn.configure(background="SystemButtonFace", relief="raised")
 			save_data_as_CSV(True)
 		else:
 			# popupmsg('No serial port opened. No data to record!')
 			messagebox.showinfo('Come on buddy...','No serial port opened. No data to record!')
 
-	def stop_btn_click (self):
-		self.start_btn.configure(background= "SystemButtonFace",relief="raised")
-		self.stop_btn.configure(background= "red",relief="sunken")
-		save_data_as_CSV(False)
+	def stop_button_click (self):
+		self.start_btn.configure(background="SystemButtonFace", relief="raised")
+		self.stop_btn.configure(background="red", relief="sunken")
+		save_data_as_CSV(state=False)
 
 
 app = DataLogApp() # Create an instance of DataLogApp
@@ -544,10 +679,10 @@ app = DataLogApp() # Create an instance of DataLogApp
 # center app window
 screen_x = app.winfo_screenwidth()
 screen_y = app.winfo_screenheight()
-window_x = 1280
+window_x=1280
 window_y = 720
-posX = (screen_x//2)-(window_x//2)
-posY = (screen_y//2)-(window_y//2)
+posX = (screen_x//2) - (window_x//2)
+posY = (screen_y//2) - (window_y//2)
 geo = f"{window_x}x{window_y}+{posX}+{posY}"
 app.geometry(geo)
 
