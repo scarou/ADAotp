@@ -34,7 +34,9 @@ double rawCurrentValue = 0; //
 double rawvoltageValue = 0;
 double amps = 0;
 double voltage = 0;
-double tempValue = 0;
+double tempValue1 = 0;
+double tempValue2 = 0;
+double tempValue3 = 0;
 int hydrogenValue = 0;
 float rawPressureValue;
 float pressureValue = 0; 
@@ -79,7 +81,7 @@ void loop() {
   // compute temperature value
   // sensing temperature
   sensors.requestTemperatures(); // request temperature to sensors DS18B20
-  tempValue = sensors.getTempCByIndex(0); // add each reading to a total
+  tempValue1 = sensors.getTempCByIndex(0); // add each reading to a total
 
 // compute Hydrogen gas value
   // sensing hydrogen gas
@@ -91,8 +93,18 @@ void loop() {
   float pressureValue = ((rawPressureValue - 0.2) / 4.5) * 100.0; // * 0.145038; // kpa *0.145038 = psi
  
  // Sending data via serial port 
-  Serial.print("Temperature,");
-  Serial.print(tempValue);
+  Serial.print("Temperature1,");
+  Serial.print(tempValue1);
+  Serial.print(",°C,");
+  
+  Serial.print("Temperature2,");
+  tempValue2 = 0.8 * tempValue1;
+  Serial.print(tempValue2);
+  Serial.print(",°C,");
+  
+  Serial.print("Temperature3,");
+  tempValue3 = tempValue1 * tempValue1;
+  Serial.print(tempValue3);
   Serial.print(",°C,");
   
   Serial.print("Current,");
