@@ -1,15 +1,19 @@
 
-# ADAotp - Version Python 3.6 !
-
-Initialement développé en Python 2.7, il est apparu utile de migrer vers Python 3.6 afin de disposer des dernières évolutions de Python et faciliter le recours à l’assistance de développeurs en Python.
+# ADAotp - Analogue Data Acquisition of the poor
 
 <img src="../master/Img/Start page.JPG" height="250"/> <img src="../master/Img/Monotoring page_1.JPG" height="250"/>
 <img src="../master/Img/Monotoring page_2.JPG" height="250"/> <img src="../master/Img/Monotoring page_3.JPG" height="250"/>
 
-# Analogue Data Acquisition of the poor
+Analogue Data Acquisition of the poor is a solution to acquire, real time monitoring and save analogue data from any kind of source that can send data throw serial connection as a comma separated string (<name of the 1st serie>,<numerical data of the 1st serie>,<units of the 1st serie>,<name of the 2nd serie>,<numerical data of the 2nd serie>,<units of the 2nd serie>, ...
+i.e.  "Temperature1,19.87,°C,Temperature2,15.90,°C,Temperature3,395.02,°C,Current,183,mA,Hydrogen,473,ppm,Pressure,4.2361111640,Psi"
 
-Analogue Data Acquisition of the poor est une solution pour collecter, visualiser en temps réel et sauvegarder les données analogiques produites par des capteurs gérés par Arduino.
-
+The project is composed of 2 different parts:
+- The Arduino part that manage sensors and data formating for serial transfer.
+- The Python part that:
+  - receive data from serial connection (Arduino, RapsberryPy, other...)
+  - Process data for real time visualization
+  - Manage data saving to csv file for additionnal anylisis in spreadsheet or any kind of softwarecsv compatible.
+  
 Le projet se compose donc de 2 parties distinctes:
 - La partie Arduino qui gérer les capteurs et la mise en forme des données pour leur transfère par liaison série.
 - La partie Python qui 
