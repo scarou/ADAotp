@@ -8,8 +8,11 @@ from tkinter import messagebox
 import json
 
 import matplotlib
+
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
+##from matplotlib.backends.backend_tkagg import NavigationToolbar2TkAgg
+from matplotlib.backends._backend_tk import NavigationToolbar2Tk
+
 from matplotlib.figure import Figure
 import matplotlib.animation as animation
 from matplotlib import style
